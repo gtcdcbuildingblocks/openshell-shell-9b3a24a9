@@ -1,0 +1,29 @@
+# The built-in `nvidia` provider profile, with the program paths of the sandbox image.
+# From `openshell provider profile export nvidia -o yaml`, minus the read-only `source` key.
+# The binaries are the paths the kernel reports inside the image (see shellblocks/policy/catalog.py).
+id: nvidia-shellblocks
+display_name: NVIDIA (shellblocks)
+description: NVIDIA inference endpoints
+category: inference
+credentials:
+- name: api_key
+  description: NVIDIA API key
+  env_vars:
+  - NVIDIA_API_KEY
+  required: true
+  auth_style: bearer
+  header_name: authorization
+  query_param: ''
+endpoints:
+- host: integrate.api.nvidia.com
+  port: 443
+  protocol: rest
+  access: read-write
+  enforcement: enforce
+binaries:
+- /usr/local/bin/python3.13
+- /usr/bin/curl
+inference_capable: true
+discovery:
+  credentials:
+  - api_key

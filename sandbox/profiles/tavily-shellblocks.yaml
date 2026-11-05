@@ -1,0 +1,35 @@
+# Modeled on the `tavily-hermes-v1` provider profile, with the program paths of the sandbox image.
+# From `openshell provider profile export tavily-hermes-v1 -o yaml`, minus the read-only `source`,
+# `scope`, and `resource_version` keys. The key goes in the request body, so the Supervisor
+# rewrites it there (`request_body_credential_rewrite`). The binaries are the paths the kernel
+# reports inside the image (see shellblocks/policy/catalog.py).
+id: tavily-shellblocks
+display_name: Tavily Search (shellblocks)
+description: Tavily Search API access for the Web Search tool in the shellblocks sandbox
+category: agent
+credentials:
+- name: api_key
+  description: Tavily Search API key
+  env_vars:
+  - TAVILY_API_KEY
+  required: true
+  auth_style: bearer
+  header_name: authorization
+  query_param: ''
+endpoints:
+- host: api.tavily.com
+  port: 443
+  protocol: rest
+  enforcement: enforce
+  rules:
+  - allow:
+      method: POST
+      path: /search
+  - allow:
+      method: POST
+      path: /extract
+  request_body_credential_rewrite: true
+binaries:
+- /usr/local/bin/node
+- /usr/bin/curl
+inference_capable: false
